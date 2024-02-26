@@ -15,14 +15,14 @@
       "types": "./dist/index.d.ts"
     },
     "./pushover": {
-      "require": "./dist/pushover.cjs",
-      "import": "./dist/pushover.js",
-      "types": "./dist/pushover.d.ts"
+      "require": "./dist/pushover/index.cjs",
+      "import": "./dist/pushover/index.js",
+      "types": "./dist/pushover/index.d.ts"
     },
     "./bark": {
-      "require": "./dist/bark.cjs",
-      "import": "./dist/bark.js",
-      "types": "./dist/bark.d.ts"
+      "require": "./dist/bark/index.cjs",
+      "import": "./dist/bark/index.js",
+      "types": "./dist/bark/index.d.ts"
     }
   },
   "typesVersions": {
@@ -31,10 +31,10 @@
         "./dist/index.d.ts"
       ],
       "./pushover": [
-        "./dist/pushover.d.ts"
+        "./dist/pushover/index.d.ts"
       ],
       "./bark": [
-        "./dist/bark.d.ts"
+        "./dist/bark/index.d.ts"
       ]
     }
   },
@@ -49,6 +49,7 @@
   },
   "scripts": {
     "test": "vitest run",
+    "test:index": "vitest run --exclude test/**/*",
     "test:pushover": "vitest run --dir test/pushover",
     "test:bark": "vitest run --dir test/bark",
     "lint": "eslint ./src",
@@ -92,12 +93,12 @@
     {
       "name": "pushover",
       "import": "{ createPushover }",
-      "path": "dist/pushover.cjs"
+      "path": "dist/pushover/index.cjs"
     },
     {
       "name": "bark",
       "import": "{ createBark }",
-      "path": "dist/bark.cjs"
+      "path": "dist/bark/index.cjs"
     }
   ]
 }
