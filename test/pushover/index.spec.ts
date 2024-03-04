@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest'
 import { createPushover } from '../../src/pushover'
 
 const pushover = createPushover({
-  token: process.env.PUSHOVER_TOKEN,
-  user: process.env.PUSHOVER_USER,
+  token: process.env.TEST_PUSHOVER_TOKEN,
+  user: process.env.TEST_PUSHOVER_USER,
 })
 
 describe('pushover', () => {

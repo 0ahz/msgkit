@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { createBark } from '../../src/bark'
 
 const bark = createBark({
-  token: process.env.BARK_TOKEN,
+  token: process.env.TEST_BARK_TOKEN,
 })
 
 describe('bark', () => {

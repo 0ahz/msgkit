@@ -1,16 +1,16 @@
 import { defu } from 'defu'
 import { ofetch, type FetchOptions } from 'ofetch'
 
-export type BaseOptions = {
+export type BaseFetchOptions = {
   baseURL: string
 }
 
-export class Base {
-  constructor(private options: Partial<BaseOptions>) {
+export class BaseFetch {
+  constructor(private options: Partial<BaseFetchOptions>) {
     this.options = defu(options, {})
   }
 
-  async request<T>(options: FetchOptions & { url: string }): Promise<T> {
+  async fetch<T>(options: FetchOptions & { url: string }): Promise<T> {
     const { url, ...otherOptions } = options
     const fetchOptions = defu(otherOptions, {
       method: 'GET',

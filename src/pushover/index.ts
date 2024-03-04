@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { defu } from 'defu'
-import { Base } from '../base'
-import type { BaseOptions } from '../base'
+import { BaseFetch, type BaseFetchOptions } from '../core/fetch'
 
 const PUSHOVER_BASE_URL = 'https://api.pushover.net/1/'
 
@@ -48,8 +47,8 @@ export type PushoverResponse = {
   request: string
 }
 
-export class Pushover extends Base {
-  constructor(private config: Partial<PushoverConfig & BaseOptions> = {}) {
+export class Pushover extends BaseFetch {
+  constructor(private config: Partial<PushoverConfig & BaseFetchOptions> = {}) {
     const { baseURL, ...poConfig } = config
     super({ baseURL: baseURL || PUSHOVER_BASE_URL })
 
@@ -59,9 +58,9 @@ export class Pushover extends Base {
   async send(options?: PushoverMessageOptions) {
     const mergedOption = defu(options, this.config)
     const body = configSchema.parse(mergedOption)
-    return await this.request<PushoverResponse>({
-      method: 'POST',
+    return await this.fetch<PushoverResponse>({
       url: '/messages.json',
+      method: 'POST',
       body,
     })
   }
@@ -69,14 +68,15 @@ export class Pushover extends Base {
   async checkLicenses(options?: Partial<PushoverLicensesOptions>) {
     const mergedOption = defu(options, this.config)
     const { token } = optionsLicensesSchema.parse(mergedOption)
-    return await this.request<PushoverResponse>({
+    return await this.fetch<PushoverResponse>({
       url: `/licenses.json?token=${token}`,
+      method: 'GET',
     })
   }
 }
 
 export const createPushover = (
-  config: Partial<PushoverConfig & BaseOptions> = {},
+  config: Partial<PushoverConfig & BaseFetchOptions> = {},
 ) => {
   return new Pushover(config)
 }

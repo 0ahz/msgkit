@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { defu } from 'defu'
-import { Base } from '../base'
-import type { BaseOptions } from '../base'
+import { BaseFetch, type BaseFetchOptions } from '../core/fetch'
 
 const BARK_BASE_URL = 'https://api.day.app/'
 
@@ -43,8 +42,8 @@ export type BarkResponse = {
   timestamp: string
 }
 
-export class Bark extends Base {
-  constructor(private config: Partial<BarkConfig & BaseOptions> = {}) {
+export class Bark extends BaseFetch {
+  constructor(private config: Partial<BarkConfig & BaseFetchOptions> = {}) {
     const { baseURL, ...barkConfig } = config
     super({ baseURL: baseURL || BARK_BASE_URL })
     this.config = defu(barkConfig, {})
@@ -53,14 +52,16 @@ export class Bark extends Base {
   async send(options?: BarkMessageOptions) {
     const mergedOption = defu(options, this.config)
     const { token, ...body } = configSchema.parse(mergedOption)
-    return await this.request<BarkResponse>({
-      method: 'POST',
+    return await this.fetch<BarkResponse>({
       url: `/${token}`,
+      method: 'POST',
       body,
     })
   }
 }
 
-export const createBark = (config: Partial<BarkConfig & BaseOptions> = {}) => {
+export const createBark = (
+  config: Partial<BarkConfig & BaseFetchOptions> = {},
+) => {
   return new Bark(config)
 }
