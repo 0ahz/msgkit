@@ -69,7 +69,8 @@ export class Pushover extends BaseFetch {
     const mergedOption = defu(options, this.config)
     const { token } = optionsLicensesSchema.parse(mergedOption)
     return await this.fetch<PushoverResponse>({
-      url: `/licenses.json?token=${token}`,
+      url: '/licenses.json',
+      query: { token },
       method: 'GET',
     })
   }
