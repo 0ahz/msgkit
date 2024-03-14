@@ -30,10 +30,10 @@
       ".": [
         "./dist/index.d.ts"
       ],
-      "./pushover": [
+      "pushover": [
         "./dist/pushover/index.d.ts"
       ],
-      "./bark": [
+      "bark": [
         "./dist/bark/index.d.ts"
       ]
     }
