@@ -31,7 +31,7 @@ po.send({
 ```js
 import { createBark } from 'msgkit'
 // or
-import { createBark } from 'msgkit/pushover'
+import { createBark } from 'msgkit/bark'
 
 const bark = createBark({ token: 'xxx' })
 
