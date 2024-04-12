@@ -42,6 +42,23 @@ bark.send({
 })
 ```
 
+### Wecom webhook [api](https://developer.work.weixin.qq.com/document/path/91770)
+
+```js
+import { createWecomWebhook } from 'msgkit'
+// or
+import { createWecomWebhook } from 'msgkit/wecom'
+
+const ww = createWecomWebhook({ token: 'xxx' })
+
+ww.send({
+  type: 'text',
+  message: {
+    content: 'Here is the message content, which can be a bit long.',
+  },
+})
+```
+
 ## License
 
 MIT &copy; [0ahz](https://github.com/0ahz)

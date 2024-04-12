@@ -23,6 +23,11 @@
       "require": "./dist/bark/index.cjs",
       "import": "./dist/bark/index.js",
       "types": "./dist/bark/index.d.ts"
+    },
+    "./wecom": {
+      "require": "./dist/wecom/index.cjs",
+      "import": "./dist/wecom/index.js",
+      "types": "./dist/wecom/index.d.ts"
     }
   },
   "typesVersions": {
@@ -35,6 +40,9 @@
       ],
       "bark": [
         "./dist/bark/index.d.ts"
+      ],
+      "wecom": [
+        "./dist/wecom/index.d.ts"
       ]
     }
   },
@@ -52,6 +60,7 @@
     "test:index": "vitest run test/*.spec.ts",
     "test:pushover": "vitest run --dir test/pushover",
     "test:bark": "vitest run --dir test/bark",
+    "test:wecom": "vitest run --dir test/wecom",
     "lint": "eslint ./src",
     "format": "prettier --write src",
     "build": "tsup && size-limit",
@@ -101,6 +110,11 @@
       "name": "bark",
       "import": "{ createBark }",
       "path": "dist/bark/index.cjs"
+    },
+    {
+      "name": "wecom",
+      "import": "{ createWecomWebhook }",
+      "path": "dist/wecom/index.cjs"
     }
   ]
 }
