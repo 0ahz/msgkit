@@ -1,12 +1,22 @@
 import { describe, expect, it } from 'vitest'
 
-import { createBark } from '../../src/bark'
+import { createBark, sendBark } from '../../src/bark'
 
 const bark = createBark({
   token: process.env.TEST_BARK_TOKEN,
 })
 
 describe('bark', () => {
+  it('sendBark', async () => {
+    const result = await sendBark({
+      token: process.env.TEST_BARK_TOKEN!,
+      body: 'Here is the message content, which can be a bit long.',
+      title: 'Here is the message title',
+    })
+    console.log(result)
+    expect(result.code).toBe(200)
+  })
+
   it('bark.send', async () => {
     const result = await bark.send({
       body: 'Here is the message content, which can be a bit long.',

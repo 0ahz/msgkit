@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { defu } from 'defu'
+import { ofetch } from 'ofetch'
 import { BaseFetch, type BaseFetchOptions } from '../core/fetch'
 
 const BARK_BASE_URL = 'https://api.day.app/'
@@ -7,7 +8,7 @@ const BARK_BASE_URL = 'https://api.day.app/'
 // https://bark.day.app/#/tutorial
 const configSchema = z.object({
   token: z.string().min(1),
-  body: z.optional(z.string()),
+  body: z.string().min(1),
   title: z.optional(z.string()),
   level: z.optional(
     z.union([
@@ -40,6 +41,16 @@ export type BarkResponse = {
   code: number
   message: string
   timestamp: string
+}
+
+export const sendBark = async (options: BarkConfig) => {
+  const { token, ...message } = configSchema.parse(options)
+  const url = `/${token}`
+  return ofetch<BarkResponse>(url, {
+    method: 'POST',
+    baseURL: BARK_BASE_URL,
+    body: message,
+  })
 }
 
 export class Bark extends BaseFetch {

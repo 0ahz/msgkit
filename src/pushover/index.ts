@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { defu } from 'defu'
+import { ofetch } from 'ofetch'
 import { BaseFetch, type BaseFetchOptions } from '../core/fetch'
 
 const PUSHOVER_BASE_URL = 'https://api.pushover.net/1/'
@@ -45,6 +46,15 @@ export type PushoverLicensesOptions = z.infer<typeof optionsLicensesSchema>
 export type PushoverResponse = {
   status: number
   request: string
+}
+
+export const sendPushover = async (options: PushoverConfig) => {
+  const body = configSchema.parse(options)
+  return ofetch<PushoverResponse>('/messages.json', {
+    method: 'POST',
+    baseURL: PUSHOVER_BASE_URL,
+    body,
+  })
 }
 
 export class Pushover extends BaseFetch {
