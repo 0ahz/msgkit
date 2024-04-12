@@ -7,6 +7,8 @@ export default defineConfig(options => {
       index: 'src/index.ts',
       'pushover/index': 'src/pushover/index.ts',
       'bark/index': 'src/bark/index.ts',
+      'wecom/index': 'src/wecom/index.ts',
+      'feishu/index': 'src/feishu/index.ts',
     },
     outDir: 'dist',
     format: ['cjs', 'esm'],

@@ -107,7 +107,7 @@
   "size-limit": [
     {
       "name": "index",
-      "import": "{ createPushover, createBark }",
+      "import": "{ createPushover, createBark, createWecomWebhook, createFeishuWebhook }",
       "path": "dist/index.cjs"
     },
     {
