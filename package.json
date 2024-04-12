@@ -28,6 +28,11 @@
       "require": "./dist/wecom/index.cjs",
       "import": "./dist/wecom/index.js",
       "types": "./dist/wecom/index.d.ts"
+    },
+    "./feishu": {
+      "require": "./dist/feishu/index.cjs",
+      "import": "./dist/feishu/index.js",
+      "types": "./dist/feishu/index.d.ts"
     }
   },
   "typesVersions": {
@@ -43,6 +48,9 @@
       ],
       "wecom": [
         "./dist/wecom/index.d.ts"
+      ],
+      "feishu": [
+        "./dist/feishu/index.d.ts"
       ]
     }
   },
@@ -61,6 +69,7 @@
     "test:pushover": "vitest run --dir test/pushover",
     "test:bark": "vitest run --dir test/bark",
     "test:wecom": "vitest run --dir test/wecom",
+    "test:feishu": "vitest run --dir test/feishu",
     "lint": "eslint ./src",
     "format": "prettier --write src",
     "build": "tsup && size-limit",
@@ -115,6 +124,11 @@
       "name": "wecom",
       "import": "{ createWecomWebhook }",
       "path": "dist/wecom/index.cjs"
+    },
+    {
+      "name": "feishu",
+      "import": "{ createFeishuWebhook }",
+      "path": "dist/feishu/index.cjs"
     }
   ]
 }

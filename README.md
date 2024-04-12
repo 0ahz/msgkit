@@ -59,6 +59,23 @@ ww.send({
 })
 ```
 
+### Feishu webhook [api](https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot)
+
+```js
+import { createFeishuWebhook } from 'msgkit'
+// or
+import { createFeishuWebhook } from 'msgkit/feishu'
+
+const hook = createFeishuWebhook({ token: 'xxx' })
+
+hook.send({
+  type: 'text',
+  message: {
+    text: 'Here is the message content, which can be a bit long.',
+  },
+})
+```
+
 ## License
 
 MIT &copy; [0ahz](https://github.com/0ahz)

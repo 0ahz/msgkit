@@ -30,13 +30,20 @@ export type WecomWebhookResponse = {
   [k: string]: any
 }
 
+const messageToBody = ({
+  type,
+  message,
+}: Pick<WecomWebhookConfig, 'type' | 'message'>) => {
+  return { msgtype: type, [type]: message }
+}
+
 export const sendWecomWebhook = (options: WecomWebhookConfig) => {
   const { token, type, message } = wecomWebhookSchema.parse(options)
   return ofetch<WecomWebhookResponse>('/send', {
     method: 'POST',
     baseURL: WECOM_WEBHOOK_URL,
     query: { key: token },
-    body: { msgtype: type, [type]: message },
+    body: messageToBody({ type, message }),
   })
 }
 
@@ -57,7 +64,7 @@ export class WecomWebhook extends BaseFetch {
       url: '/send',
       method: 'POST',
       query: { key: token },
-      body: { msgtype: type, [type]: message },
+      body: messageToBody({ type, message }),
     })
   }
 }
