@@ -33,6 +33,11 @@
       "require": "./dist/feishu/index.cjs",
       "import": "./dist/feishu/index.js",
       "types": "./dist/feishu/index.d.ts"
+    },
+    "./ding": {
+      "require": "./dist/ding/index.cjs",
+      "import": "./dist/ding/index.js",
+      "types": "./dist/ding/index.d.ts"
     }
   },
   "typesVersions": {
@@ -51,6 +56,9 @@
       ],
       "feishu": [
         "./dist/feishu/index.d.ts"
+      ],
+      "ding": [
+        "./dist/ding/index.d.ts"
       ]
     }
   },
@@ -131,6 +139,11 @@
       "name": "feishu",
       "import": "{ createFeishuWebhook }",
       "path": "dist/feishu/index.cjs"
+    },
+    {
+      "name": "ding",
+      "import": "{ createDingWebhook }",
+      "path": "dist/ding/index.cjs"
     }
   ]
 }

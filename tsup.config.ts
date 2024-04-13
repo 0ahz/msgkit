@@ -9,6 +9,7 @@ export default defineConfig(options => {
       'bark/index': 'src/bark/index.ts',
       'wecom/index': 'src/wecom/index.ts',
       'feishu/index': 'src/feishu/index.ts',
+      'ding/index': 'src/ding/index.ts',
     },
     outDir: 'dist',
     format: ['cjs', 'esm'],

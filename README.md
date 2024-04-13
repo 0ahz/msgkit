@@ -158,7 +158,7 @@ await DingWebhook.send({
 
 // or
 
-const hook = new FeishuWebhook({ token: 'xxx' })
+const hook = new DingWebhook({ token: 'xxx' })
 
 await hook.send({
   type: 'text',
