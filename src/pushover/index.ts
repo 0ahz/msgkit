@@ -1,12 +1,10 @@
 import { z } from 'zod'
 import { defu } from 'defu'
 import { ofetch } from 'ofetch'
-import { BaseFetch, type BaseFetchOptions } from '../core/fetch'
 
 const PUSHOVER_BASE_URL = 'https://api.pushover.net/1/'
 
-// https://pushover.net/api
-const configSchema = z.object({
+const optionsSchema = z.object({
   token: z.string().min(1),
   user: z.string().min(1),
   message: z.string(),
@@ -29,65 +27,34 @@ const configSchema = z.object({
   url_title: z.optional(z.string()),
 })
 
-const configPartialSchema = configSchema.partial()
-
-const optionsMessageSchema = configPartialSchema.extend({
-  message: z.string(),
-})
-
-const optionsLicensesSchema = configSchema.pick({ token: true })
-
-export type PushoverConfig = z.infer<typeof configSchema>
-
-export type PushoverMessageOptions = z.infer<typeof optionsMessageSchema>
-
-export type PushoverLicensesOptions = z.infer<typeof optionsLicensesSchema>
+export type PushoverOptions = z.infer<typeof optionsSchema>
 
 export type PushoverResponse = {
   status: number
   request: string
 }
 
-export const sendPushover = async (options: PushoverConfig) => {
-  const body = configSchema.parse(options)
-  return ofetch<PushoverResponse>('/messages.json', {
-    method: 'POST',
-    baseURL: PUSHOVER_BASE_URL,
-    body,
-  })
-}
-
-export class Pushover extends BaseFetch {
-  constructor(private config: Partial<PushoverConfig & BaseFetchOptions> = {}) {
-    const { baseURL, ...poConfig } = config
-    super({ baseURL: baseURL || PUSHOVER_BASE_URL })
-
-    this.config = defu(poConfig, {})
+export class Pushover {
+  constructor(private options: Partial<PushoverOptions> = {}) {
+    this.options = defu(options, {})
   }
 
-  async send(options?: PushoverMessageOptions) {
-    const mergedOption = defu(options, this.config)
-    const body = configSchema.parse(mergedOption)
-    return await this.fetch<PushoverResponse>({
-      url: '/messages.json',
+  static async send(options: PushoverOptions) {
+    const body = optionsSchema.parse(options)
+    return await ofetch<PushoverResponse>('/messages.json', {
       method: 'POST',
+      baseURL: PUSHOVER_BASE_URL,
       body,
     })
   }
 
-  async checkLicenses(options?: Partial<PushoverLicensesOptions>) {
-    const mergedOption = defu(options, this.config)
-    const { token } = optionsLicensesSchema.parse(mergedOption)
-    return await this.fetch<PushoverResponse>({
-      url: '/licenses.json',
-      query: { token },
-      method: 'GET',
-    })
+  async send(options?: Partial<PushoverOptions>) {
+    const mergedOptions = defu(options, this.options)
+    const parsedOptions = optionsSchema.parse(mergedOptions)
+    return await Pushover.send(parsedOptions)
   }
 }
 
-export const createPushover = (
-  config: Partial<PushoverConfig & BaseFetchOptions> = {},
-) => {
+export const createPushover = (config: Partial<PushoverOptions> = {}) => {
   return new Pushover(config)
 }

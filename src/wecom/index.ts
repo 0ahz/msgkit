@@ -1,28 +1,27 @@
 import { z } from 'zod'
 import { defu } from 'defu'
 import { ofetch } from 'ofetch'
-import { BaseFetch, type BaseFetchOptions } from '../core/fetch'
+import { isAbsoluteURL } from '../utils'
 
 const WECOM_WEBHOOK_URL = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/'
 
-// https://developer.work.weixin.qq.com/document/path/91770
-const wecomWebhookSchema = z.object({
+const typeSchema = z.union([
+  z.literal('text'),
+  z.literal('markdown'),
+  z.literal('image'),
+  z.literal('news'),
+  z.literal('file'),
+  z.literal('voice'),
+  z.literal('template_card'),
+])
+
+const optionsSchema = z.object({
   token: z.string().min(1),
-  type: z.union([
-    z.literal('text'),
-    z.literal('markdown'),
-    z.literal('image'),
-    z.literal('news'),
-    z.literal('file'),
-    z.literal('voice'),
-    z.literal('template_card'),
-  ]),
+  type: typeSchema,
   message: z.record(z.any()),
 })
 
-export type WecomWebhookConfig = z.infer<typeof wecomWebhookSchema>
-
-export type WecomWebhookOptions = Partial<WecomWebhookConfig>
+export type WecomWebhookOptions = z.infer<typeof optionsSchema>
 
 export type WecomWebhookResponse = {
   errcode: number
@@ -30,47 +29,36 @@ export type WecomWebhookResponse = {
   [k: string]: any
 }
 
-const messageToBody = ({
-  type,
-  message,
-}: Pick<WecomWebhookConfig, 'type' | 'message'>) => {
-  return { msgtype: type, [type]: message }
+const messageToBody = (options: WecomWebhookOptions) => {
+  return { msgtype: options.type, [options.type]: options.message }
 }
 
-export const sendWecomWebhook = (options: WecomWebhookConfig) => {
-  const { token, type, message } = wecomWebhookSchema.parse(options)
-  return ofetch<WecomWebhookResponse>('/send', {
-    method: 'POST',
-    baseURL: WECOM_WEBHOOK_URL,
-    query: { key: token },
-    body: messageToBody({ type, message }),
-  })
-}
-
-export class WecomWebhook extends BaseFetch {
-  constructor(
-    private config: Partial<WecomWebhookConfig & BaseFetchOptions> = {},
-  ) {
-    const { baseURL, ...wwConfig } = config
-    super({ baseURL: baseURL || WECOM_WEBHOOK_URL })
-
-    this.config = defu(wwConfig, {})
+export class WecomWebhook {
+  constructor(private options: Partial<WecomWebhookOptions> = {}) {
+    this.options = defu(options, {})
   }
 
-  async send(options?: WecomWebhookOptions) {
-    const mergedOptions = defu(options, this.config)
-    const { token, type, message } = wecomWebhookSchema.parse(mergedOptions)
-    return await this.fetch<WecomWebhookResponse>({
-      url: '/send',
+  static send(options: WecomWebhookOptions) {
+    const parsedOptions = optionsSchema.parse(options)
+    const url = isAbsoluteURL(parsedOptions.token)
+      ? parsedOptions.token
+      : `/send?key=${parsedOptions.token}`
+    return ofetch<WecomWebhookResponse>(url, {
       method: 'POST',
-      query: { key: token },
-      body: messageToBody({ type, message }),
+      baseURL: WECOM_WEBHOOK_URL,
+      body: messageToBody(parsedOptions),
     })
+  }
+
+  async send(options?: Partial<WecomWebhookOptions>) {
+    const mergedOptions = defu(options, this.options)
+    const parsedOptions = optionsSchema.parse(mergedOptions)
+    return await WecomWebhook.send(parsedOptions)
   }
 }
 
 export const createWecomWebhook = (
-  config: Partial<WecomWebhookConfig & BaseFetchOptions> = {},
+  options: Partial<WecomWebhookOptions> = {},
 ) => {
-  return new WecomWebhook(config)
+  return new WecomWebhook(options)
 }

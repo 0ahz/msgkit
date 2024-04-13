@@ -1,13 +1,11 @@
 import { z } from 'zod'
 import { defu } from 'defu'
 import { ofetch } from 'ofetch'
-import { BaseFetch, type BaseFetchOptions } from '../core/fetch'
+import { isAbsoluteURL } from '../utils'
 
 const FEISHU_WEBHOOK_URL = 'https://open.feishu.cn/open-apis/bot/v2/hook/'
 
-// https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot
-
-const feishuWebhookMsgTypeSchema = z.union([
+const typeSchema = z.union([
   z.literal('text'),
   z.literal('post'),
   z.literal('share_chat'),
@@ -15,24 +13,19 @@ const feishuWebhookMsgTypeSchema = z.union([
   z.literal('interactive'),
 ])
 
-const feishuWebhookSchema = z.object({
-  token: z.string().min(1),
-  type: feishuWebhookMsgTypeSchema,
-  message: z.record(z.any()),
-  secure: z.optional(
-    z.object({
-      timestamp: z.string().min(1),
-      sign: z.string().min(1),
-    }),
-  ),
+const secureSchema = z.object({
+  timestamp: z.string().min(1),
+  sign: z.string().min(1),
 })
 
-export type FeishuWebhookMessageType = z.infer<
-  typeof feishuWebhookMsgTypeSchema
->
-export type FeishuWebhookConfig = z.infer<typeof feishuWebhookSchema>
+const optionsSchema = z.object({
+  token: z.string().min(1),
+  type: typeSchema,
+  message: z.record(z.any()),
+  secure: z.optional(secureSchema),
+})
 
-export type FeishuWebhookOptions = Partial<FeishuWebhookConfig>
+export type FeishuWebhookOptions = z.infer<typeof optionsSchema>
 
 export type FeishuWebhookResponse = {
   code: number
@@ -41,56 +34,45 @@ export type FeishuWebhookResponse = {
   [k: string]: any
 }
 
-const messageToBody = ({
-  type,
-  message,
-  secure,
-}: Pick<FeishuWebhookConfig, 'type' | 'message' | 'secure'>) => {
-  const body: Record<string, any> = { msg_type: type }
-  if (['interactive'].includes(type)) {
-    body.card = message
+const messageToBody = (options: FeishuWebhookOptions) => {
+  const body: Record<string, any> = { msg_type: options.type }
+  if (['interactive'].includes(options.type)) {
+    body.card = options.message
   } else {
-    body.content = message
+    body.content = options.message
   }
-  if (secure) {
-    Object.assign(body, secure)
+  if (options.secure) {
+    Object.assign(body, options.secure)
   }
   return body
 }
 
-export const sendFeishuWebhook = (options: FeishuWebhookConfig) => {
-  const { token, type, message, secure } = feishuWebhookSchema.parse(options)
-  return ofetch<FeishuWebhookResponse>(`/${token}`, {
-    method: 'POST',
-    baseURL: FEISHU_WEBHOOK_URL,
-    body: messageToBody({ type, message, secure }),
-  })
-}
-
-export class FeishuWebhook extends BaseFetch {
-  constructor(
-    private config: Partial<FeishuWebhookConfig & BaseFetchOptions> = {},
-  ) {
-    const { baseURL, ...wwConfig } = config
-    super({ baseURL: baseURL || FEISHU_WEBHOOK_URL })
-
-    this.config = defu(wwConfig, {})
+export class FeishuWebhook {
+  constructor(private options: Partial<FeishuWebhookOptions> = {}) {
+    this.options = defu(options, {})
   }
 
-  async send(options?: FeishuWebhookOptions) {
-    const mergedOptions = defu(options, this.config)
-    const { token, type, message, secure } =
-      feishuWebhookSchema.parse(mergedOptions)
-    return await this.fetch<FeishuWebhookResponse>({
-      url: `/${token}`,
+  static send(options: Partial<FeishuWebhookOptions>) {
+    const parsedOptions = optionsSchema.parse(options)
+    const url = isAbsoluteURL(parsedOptions.token)
+      ? parsedOptions.token
+      : `/${parsedOptions.token}`
+    return ofetch<FeishuWebhookResponse>(url, {
       method: 'POST',
-      body: messageToBody({ type, message, secure }),
+      baseURL: FEISHU_WEBHOOK_URL,
+      body: messageToBody(parsedOptions),
     })
+  }
+
+  async send(options?: Partial<FeishuWebhookOptions>) {
+    const mergedOptions = defu(options, this.options)
+    const parsedOptions = optionsSchema.parse(mergedOptions)
+    return FeishuWebhook.send(parsedOptions)
   }
 }
 
 export const createFeishuWebhook = (
-  config: Partial<FeishuWebhookConfig & BaseFetchOptions> = {},
+  options: Partial<FeishuWebhookOptions> = {},
 ) => {
-  return new FeishuWebhook(config)
+  return new FeishuWebhook(options)
 }

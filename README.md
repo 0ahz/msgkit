@@ -10,48 +10,91 @@ pnpm i msgkit
 
 ## Usage
 
-### Pushover [api](https://pushover.net/api)
+### Pushover
+
+https://pushover.net/api
 
 ```js
-import { createPushover } from 'msgkit'
+import { Pushover } from 'msgkit'
 // or
-import { createPushover } from 'msgkit/pushover'
+import { Pushover } from 'msgkit/pushover'
 
-const po = createPushover({ user: 'xxx', token: 'xxx' })
+await Pushover.send({
+  user: 'xxx',
+  token: 'xxx',
+  title: 'Here is the message title',
+  message: 'Here is the message content, which can be a bit long.',
+  // other options
+})
 
-po.send({
+// or
+
+const po = new Pushover({ user: 'xxx', token: 'xxx' })
+
+await po.send({
   message: 'Here is the message content, which can be a bit long.',
   title: 'Here is the message title',
   // other options
 })
 ```
 
-### Bark [api](https://bark.day.app/#/tutorial)
+### Bark
+
+https://bark.day.app/#/tutorial
 
 ```js
-import { createBark } from 'msgkit'
+import { Bark } from 'msgkit'
 // or
-import { createBark } from 'msgkit/bark'
+import { Bark } from 'msgkit/bark'
 
-const bark = createBark({ token: 'xxx' })
+// token=xxx
+// or url
+// token=https://api.day.app/xxx
+
+Bark.send({
+  token: 'xxx',
+  title: 'Here is the message title',
+  body: 'Here is the message content, which can be a bit long.',
+  // other options
+})
+
+// or
+
+const bark = new Bark({ token: 'xxx' })
 
 bark.send({
-  body: 'Here is the message content, which can be a bit long.',
   title: 'Here is the message title',
+  body: 'Here is the message content, which can be a bit long.',
   // other options
 })
 ```
 
-### Wecom webhook [api](https://developer.work.weixin.qq.com/document/path/91770)
+### Wecom webhook
+
+https://developer.work.weixin.qq.com/document/path/91770
 
 ```js
-import { createWecomWebhook } from 'msgkit'
+import { WecomWebhook } from 'msgkit'
 // or
-import { createWecomWebhook } from 'msgkit/wecom'
+import { WecomWebhook } from 'msgkit/wecom'
 
-const ww = createWecomWebhook({ token: 'xxx' })
+// token=xxx
+// or url
+// token=https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxx
 
-ww.send({
+WecomWebhook.send({
+  token: 'xxx',
+  type: 'text',
+  message: {
+    content: 'Here is the message content, which can be a bit long.',
+  },
+})
+
+// or
+
+const hook = new WecomWebhook({ token: 'xxx' })
+
+hook.send({
   type: 'text',
   message: {
     content: 'Here is the message content, which can be a bit long.',
@@ -59,14 +102,30 @@ ww.send({
 })
 ```
 
-### Feishu webhook [api](https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot)
+### Feishu webhook
+
+https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot
 
 ```js
-import { createFeishuWebhook } from 'msgkit'
+import { FeishuWebhook } from 'msgkit'
 // or
-import { createFeishuWebhook } from 'msgkit/feishu'
+import { FeishuWebhook } from 'msgkit/feishu'
 
-const hook = createFeishuWebhook({ token: 'xxx' })
+// token=xxx
+// or url
+// token=https://open.feishu.cn/open-apis/bot/v2/hook/xxx
+
+FeishuWebhook.send({
+  token: 'xxx',
+  type: 'text',
+  message: {
+    text: 'Here is the message content, which can be a bit long.',
+  },
+})
+
+// or
+
+const hook = new FeishuWebhook({ token: 'xxx' })
 
 hook.send({
   type: 'text',

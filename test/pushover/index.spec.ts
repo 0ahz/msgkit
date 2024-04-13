@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { createPushover, sendPushover } from '../../src/pushover'
+import { Pushover, createPushover } from '../../src/pushover'
 
 const pushover = createPushover({
   token: process.env.TEST_PUSHOVER_TOKEN,
@@ -8,8 +8,8 @@ const pushover = createPushover({
 })
 
 describe('pushover', () => {
-  it('sendBark', async () => {
-    const result = await sendPushover({
+  it('Pushover.send', async () => {
+    const result = await Pushover.send({
       token: process.env.TEST_PUSHOVER_TOKEN!,
       user: process.env.TEST_PUSHOVER_USER!,
       message: 'Here is the message content, which can be a bit long.',
@@ -19,17 +19,11 @@ describe('pushover', () => {
     expect(result.status).toBe(1)
   })
 
-  it('pushover.send', async () => {
+  it('createPushover pushover.send', async () => {
     const result = await pushover.send({
       message: 'Here is the message content, which can be a bit long.',
       title: 'Here is the message title',
     })
-    console.log(result)
-    expect(result.status).toBe(1)
-  })
-
-  it('pushover.checkLicenses', async () => {
-    const result = await pushover.checkLicenses()
     console.log(result)
     expect(result.status).toBe(1)
   })
