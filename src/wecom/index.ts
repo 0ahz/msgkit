@@ -38,12 +38,12 @@ export class WecomWebhook {
     this.options = defu(options, {})
   }
 
-  static send(options: WecomWebhookOptions) {
+  static async send(options: WecomWebhookOptions) {
     const parsedOptions = optionsSchema.parse(options)
     const url = isAbsoluteURL(parsedOptions.token)
       ? parsedOptions.token
       : `/send?key=${parsedOptions.token}`
-    return ofetch<WecomWebhookResponse>(url, {
+    return await ofetch<WecomWebhookResponse>(url, {
       method: 'POST',
       baseURL: WECOM_WEBHOOK_URL,
       body: messageToBody(parsedOptions),

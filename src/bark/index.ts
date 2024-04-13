@@ -42,7 +42,7 @@ export class Bark {
   static async send(options: BarkOptions) {
     const { token, ...body } = optionsSchema.parse(options)
     const url = isAbsoluteURL(token) ? token : `/${token}`
-    return ofetch<BarkResponse>(url, {
+    return await ofetch<BarkResponse>(url, {
       method: 'POST',
       baseURL: BARK_BASE_URL,
       body,

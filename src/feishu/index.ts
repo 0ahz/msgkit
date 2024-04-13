@@ -52,12 +52,12 @@ export class FeishuWebhook {
     this.options = defu(options, {})
   }
 
-  static send(options: Partial<FeishuWebhookOptions>) {
+  static async send(options: Partial<FeishuWebhookOptions>) {
     const parsedOptions = optionsSchema.parse(options)
     const url = isAbsoluteURL(parsedOptions.token)
       ? parsedOptions.token
       : `/${parsedOptions.token}`
-    return ofetch<FeishuWebhookResponse>(url, {
+    return await ofetch<FeishuWebhookResponse>(url, {
       method: 'POST',
       baseURL: FEISHU_WEBHOOK_URL,
       body: messageToBody(parsedOptions),
@@ -67,7 +67,7 @@ export class FeishuWebhook {
   async send(options?: Partial<FeishuWebhookOptions>) {
     const mergedOptions = defu(options, this.options)
     const parsedOptions = optionsSchema.parse(mergedOptions)
-    return FeishuWebhook.send(parsedOptions)
+    return await FeishuWebhook.send(parsedOptions)
   }
 }
 

@@ -51,7 +51,7 @@ import { Bark } from 'msgkit/bark'
 // or url
 // token=https://api.day.app/xxx
 
-Bark.send({
+await Bark.send({
   token: 'xxx',
   title: 'Here is the message title',
   body: 'Here is the message content, which can be a bit long.',
@@ -62,7 +62,7 @@ Bark.send({
 
 const bark = new Bark({ token: 'xxx' })
 
-bark.send({
+await bark.send({
   title: 'Here is the message title',
   body: 'Here is the message content, which can be a bit long.',
   // other options
@@ -82,7 +82,7 @@ import { WecomWebhook } from 'msgkit/wecom'
 // or url
 // token=https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxx
 
-WecomWebhook.send({
+await WecomWebhook.send({
   token: 'xxx',
   type: 'text',
   message: {
@@ -94,7 +94,7 @@ WecomWebhook.send({
 
 const hook = new WecomWebhook({ token: 'xxx' })
 
-hook.send({
+await hook.send({
   type: 'text',
   message: {
     content: 'Here is the message content, which can be a bit long.',
@@ -115,7 +115,7 @@ import { FeishuWebhook } from 'msgkit/feishu'
 // or url
 // token=https://open.feishu.cn/open-apis/bot/v2/hook/xxx
 
-FeishuWebhook.send({
+await FeishuWebhook.send({
   token: 'xxx',
   type: 'text',
   message: {
@@ -127,10 +127,43 @@ FeishuWebhook.send({
 
 const hook = new FeishuWebhook({ token: 'xxx' })
 
-hook.send({
+await hook.send({
   type: 'text',
   message: {
     text: 'Here is the message content, which can be a bit long.',
+  },
+})
+```
+
+### Dingtalk webhook
+
+https://open.dingtalk.com/document/robots/custom-robot-access
+
+```js
+import { DingWebhook } from 'msgkit'
+// or
+import { DingWebhook } from 'msgkit/ding'
+
+// token=xxx
+// or url
+// token=https://oapi.dingtalk.com/robot/send?access_token=xxx
+
+await DingWebhook.send({
+  token: 'xxx',
+  type: 'text',
+  message: {
+    content: 'Here is the message content, which can be a bit long.',
+  },
+})
+
+// or
+
+const hook = new FeishuWebhook({ token: 'xxx' })
+
+await hook.send({
+  type: 'text',
+  message: {
+    content: 'Here is the message content, which can be a bit long.',
   },
 })
 ```
