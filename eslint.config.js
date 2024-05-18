@@ -1,18 +1,27 @@
-import tsParser from '@typescript-eslint/parser'
-import globals from 'globals'
+import unjs from 'eslint-config-unjs'
 
-export default [
+export default unjs(
   {
-    files: ['src/**/*.{js,ts}', 'test/**/*.{js,ts}'],
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
-      parser: tsParser,
-    },
     ignores: [
+      'dist',
+      'node_modules',
       //
     ],
   },
-]
+  {
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
+    },
+  },
+)
