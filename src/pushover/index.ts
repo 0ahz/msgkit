@@ -11,6 +11,7 @@ const optionsSchema = z.object({
   title: z.optional(z.string()),
   device: z.optional(z.string()),
   html: z.optional(z.literal(1)),
+  monospace: z.optional(z.literal(1)),
   priority: z.optional(
     z.union([
       z.literal(-2), // Lowest Priority

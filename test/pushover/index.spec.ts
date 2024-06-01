@@ -27,4 +27,26 @@ describe('pushover', () => {
     console.log(result)
     expect(result.status).toBe(1)
   })
+
+  it('createPushover pushover.send html', async () => {
+    const result = await pushover.send({
+      message:
+        'Here is the message content, which can be a bit long.<br /><b>word</b> <i>word</i> <u>word</u> <font color="#0000ff">word</font> <a href="http://example.com/">word</a>',
+      title: 'Here is the message title',
+      html: 1,
+    })
+    console.log(result)
+    expect(result.status).toBe(1)
+  })
+
+  it('createPushover pushover.send html monospace', async () => {
+    const result = await pushover.send({
+      message:
+        'Here is the message content, which can be a bit long.\none\ntwo\nthree',
+      title: 'Here is the message title',
+      monospace: 1,
+    })
+    console.log(result)
+    expect(result.status).toBe(1)
+  })
 })
