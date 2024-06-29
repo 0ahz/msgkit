@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { defu } from 'defu'
 import { ofetch } from 'ofetch'
-import { isAbsoluteURL } from '../utils'
+import { isAbsoluteURL } from '../../utils'
 
 const BARK_BASE_URL = 'https://api.day.app/'
 

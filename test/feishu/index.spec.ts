@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { FeishuWebhook, createFeishuWebhook } from '../../src/feishu'
+import { FeishuWebhook, createFeishuWebhook } from '../../src/provider/feishu'
 
 const hook = createFeishuWebhook({
   token: process.env.TEST_FEISHU_WEBHOOK_TOKEN,

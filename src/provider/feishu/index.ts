@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { defu } from 'defu'
 import { ofetch } from 'ofetch'
-import { isAbsoluteURL } from '../utils'
+import { isAbsoluteURL } from '../../utils'
 
 const FEISHU_WEBHOOK_URL = 'https://open.feishu.cn/open-apis/bot/v2/hook/'
 

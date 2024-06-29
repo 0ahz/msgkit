@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { defu } from 'defu'
 import { ofetch } from 'ofetch'
-import { isAbsoluteURL } from '../utils'
+import { isAbsoluteURL } from '../../utils'
 
 const WECOM_WEBHOOK_URL = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/'
 

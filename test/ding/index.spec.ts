@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { DingWebhook, createDingWebhook } from '../../src/ding'
+import { DingWebhook, createDingWebhook } from '../../src/provider/ding'
 
 const hook = createDingWebhook({
   token: process.env.TEST_DING_WEBHOOK_TOKEN,

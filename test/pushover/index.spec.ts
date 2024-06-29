@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { Pushover, createPushover } from '../../src/pushover'
+import { Pushover, createPushover } from '../../src/provider/pushover'
 
 const pushover = createPushover({
   token: process.env.TEST_PUSHOVER_TOKEN,

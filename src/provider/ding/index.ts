@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { defu } from 'defu'
 import { withQuery } from 'ufo'
 import { ofetch } from 'ofetch'
-import { isAbsoluteURL } from '../utils'
+import { isAbsoluteURL } from '../../utils'
 
 const DING_WEBHOOK_URL = 'https://oapi.dingtalk.com/robot/'
 

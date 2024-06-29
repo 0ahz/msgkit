@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { WecomWebhook, createWecomWebhook } from '../../src/wecom'
+import { WecomWebhook, createWecomWebhook } from '../../src/provider/wecom'
 
 const hook = createWecomWebhook({
   token: process.env.TEST_WECOM_WEBHOOK_TOKEN,

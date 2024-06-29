@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { Bark, createBark } from '../../src/bark'
+import { Bark, createBark } from '../../src/provider/bark'
 
 const bark = createBark({
   token: process.env.TEST_BARK_TOKEN,
