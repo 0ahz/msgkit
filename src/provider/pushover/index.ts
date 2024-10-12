@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { defu } from 'defu'
-import { ofetch } from 'ofetch'
+import { fetchPost } from '../../utils'
 
 const PUSHOVER_BASE_URL = 'https://api.pushover.net/1/'
 
@@ -42,11 +42,8 @@ export class Pushover {
 
   static async send(options: PushoverOptions) {
     const body = optionsSchema.parse(options)
-    return await ofetch<PushoverResponse>('/messages.json', {
-      method: 'POST',
-      baseURL: PUSHOVER_BASE_URL,
-      body,
-    })
+    const url = `${PUSHOVER_BASE_URL}/messages.json`
+    return fetchPost<PushoverResponse>(url, body)
   }
 
   async send(options?: Partial<PushoverOptions>) {

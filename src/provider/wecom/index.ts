@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { defu } from 'defu'
-import { ofetch } from 'ofetch'
-import { isAbsoluteURL } from '../../utils'
+import { withQuery } from 'ufo'
+import { isAbsoluteURL, fetchPost } from '../../utils'
 
 const WECOM_WEBHOOK_URL = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/'
 
@@ -40,14 +40,14 @@ export class WecomWebhook {
 
   static async send(options: WecomWebhookOptions) {
     const parsedOptions = optionsSchema.parse(options)
-    const url = isAbsoluteURL(parsedOptions.token)
+    let url = isAbsoluteURL(parsedOptions.token)
       ? parsedOptions.token
-      : `/send?key=${parsedOptions.token}`
-    return await ofetch<WecomWebhookResponse>(url, {
-      method: 'POST',
-      baseURL: WECOM_WEBHOOK_URL,
-      body: messageToBody(parsedOptions),
-    })
+      : `${WECOM_WEBHOOK_URL}/send`
+    url = withQuery(url, { key: parsedOptions.token })
+    return await fetchPost<WecomWebhookResponse>(
+      url,
+      messageToBody(parsedOptions),
+    )
   }
 
   async send(options?: Partial<WecomWebhookOptions>) {

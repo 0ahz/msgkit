@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { defu } from 'defu'
-import { ofetch } from 'ofetch'
-import { isAbsoluteURL } from '../../utils'
+import { isAbsoluteURL, fetchPost } from '../../utils'
 
 const FEISHU_WEBHOOK_URL = 'https://open.feishu.cn/open-apis/bot/v2/hook/'
 
@@ -56,12 +55,11 @@ export class FeishuWebhook {
     const parsedOptions = optionsSchema.parse(options)
     const url = isAbsoluteURL(parsedOptions.token)
       ? parsedOptions.token
-      : `/${parsedOptions.token}`
-    return await ofetch<FeishuWebhookResponse>(url, {
-      method: 'POST',
-      baseURL: FEISHU_WEBHOOK_URL,
-      body: messageToBody(parsedOptions),
-    })
+      : `${FEISHU_WEBHOOK_URL}/${parsedOptions.token}`
+    return await fetchPost<FeishuWebhookResponse>(
+      url,
+      messageToBody(parsedOptions),
+    )
   }
 
   async send(options?: Partial<FeishuWebhookOptions>) {

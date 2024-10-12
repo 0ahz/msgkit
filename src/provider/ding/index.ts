@@ -1,8 +1,7 @@
 import { z } from 'zod'
 import { defu } from 'defu'
 import { withQuery } from 'ufo'
-import { ofetch } from 'ofetch'
-import { isAbsoluteURL } from '../../utils'
+import { isAbsoluteURL, fetchPost } from '../../utils'
 
 const DING_WEBHOOK_URL = 'https://oapi.dingtalk.com/robot/'
 
@@ -61,15 +60,15 @@ export class DingWebhook {
     const parsedOptions = optionsSchema.parse(options)
     let url = isAbsoluteURL(parsedOptions.token)
       ? parsedOptions.token
-      : `/send?access_token=${parsedOptions.token}`
+      : `${DING_WEBHOOK_URL}/send`
+    url = withQuery(url, { access_token: parsedOptions.token })
     if (parsedOptions.secure) {
       url = withQuery(url, parsedOptions.secure)
     }
-    return await ofetch<DingWebhookResponse>(url, {
-      method: 'POST',
-      baseURL: DING_WEBHOOK_URL,
-      body: messageToBody(parsedOptions),
-    })
+    return await fetchPost<DingWebhookResponse>(
+      url,
+      messageToBody(parsedOptions),
+    )
   }
 
   async send(options?: Partial<DingWebhookOptions>) {

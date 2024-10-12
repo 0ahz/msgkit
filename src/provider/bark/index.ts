@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { defu } from 'defu'
-import { ofetch } from 'ofetch'
-import { isAbsoluteURL } from '../../utils'
+import { isAbsoluteURL, fetchPost } from '../../utils'
 
 const BARK_BASE_URL = 'https://api.day.app/'
 
@@ -41,12 +40,8 @@ export class Bark {
 
   static async send(options: BarkOptions) {
     const { token, ...body } = optionsSchema.parse(options)
-    const url = isAbsoluteURL(token) ? token : `/${token}`
-    return await ofetch<BarkResponse>(url, {
-      method: 'POST',
-      baseURL: BARK_BASE_URL,
-      body,
-    })
+    const url = isAbsoluteURL(token) ? token : `${BARK_BASE_URL}/${token}`
+    return await fetchPost<BarkResponse>(url, body)
   }
 
   async send(options?: Partial<BarkOptions>) {
