@@ -5,7 +5,6 @@ export default unjs(
     ignores: [
       'dist',
       'node_modules',
-      '.husky/install.mjs',
       //
     ],
   },
